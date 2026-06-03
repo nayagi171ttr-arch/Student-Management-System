@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Dashboard Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: #334155;
+            padding: 2rem 1.5rem;
+        }
+
+        .dashboard-container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+  
+        header {
+            background: #ffffff;
+            padding: 1.5rem 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-left: 6px solid #0d9488; 
+        }
+
+        h1 {
+            color: #0f172a;
+            font-size: 1.6rem;
+            font-weight: 700;
+        }
+
+        .welcome-text {
+            font-size: 0.95rem;
+            color: #475569;
+        }
+
+        .logout-btn {
+            color: #f43f5e;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 10px;
+            padding: 0.4rem 0.8rem;
+            border-radius: 6px;
+            background-color: #fff1f2;
+            transition: all 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background-color: #ffe4e6;
+            color: #e11d48;
+        }
+
+        .token-banner {
+            background-color: #e2e8f0;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 2rem;
+            display: inline-block;
+        }
+
+        .token-banner code {
+            background: #ffffff;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            color: #0f172a;
+            font-weight: 600;
+            border: 1px solid #cbd5e1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .stat-card {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            border-top: 4px solid #3b82f6; 
+        }
+
+        .stat-card.students {
+            border-top-color: #8b5cf6; 
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #64748b;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        
+        h3.section-title {
+            color: #0f172a;
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-container {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f8fafc;
+            color: #475569;
+            padding: 1rem 1.5rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+            border-bottom: 2px solid #edf2f7;
+        }
+
+        td {
+            padding: 1rem 1.5rem;
+            font-size: 0.95rem;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .empty-state {
+            padding: 2rem;
+            text-align: center;
+            color: #64748b;
+            font-style: italic;
+        }
+
+
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+       
+        <header>
+            <div>
+                <h1>Staff Dashboard Portal</h1>
+                <p class="welcome-text">Welcome, <strong>Professor {{ request.user.get_full_name }}</strong></p>
+            </div>
+            <div>
+                <a href="{% url 'user_logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+      
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-label">Assigned Form Room Section</div>
+                <div class="stat-value">{{ section }}</div>
+            </div>
+            
+            <div class="stat-card students">
+                <div class="stat-label">Total Active Students Allocated</div>
+                <div class="stat-value">{{ total_students }}</div>
+            </div>
+        </div>
+
+    
+        <h3 class="section-title">Student Roster Matrix List</h3>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student Full Name</th>
+                        <th>Parent / Guardian Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for std in students %}
+                        <tr>
+                            <td><strong>{{ std.user.get_full_name }}</strong></td>
+                            <td>{{ std.parent_name }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="2" class="empty-state">
+                                There are currently no students allocated under your section database.
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</body>
+</html>

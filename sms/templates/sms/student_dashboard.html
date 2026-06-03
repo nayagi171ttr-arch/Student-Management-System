@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Profile Portal</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            padding: 2rem 1.5rem;
+        }
+
+        .portal-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+       
+        header {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6); /* Royal Blue Gradient */
+            padding: 2rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 15px -3px rgba(30, 58, 138, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+        }
+
+        h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.5px;
+        }
+
+        .welcome-text {
+            font-size: 0.95rem;
+            color: #bfdbfe;
+        }
+
+    
+        .logout-btn {
+            color: #ffffff;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background-color: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(4px);
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-btn:hover {
+            background-color: #ef4444;
+            border-color: #ef4444;
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+
+ 
+        .meta-strip {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #ffffff;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            border: 1px solid #e2e8f0;
+        }
+
+        .meta-strip code {
+            background: #f1f5f9;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            color: #0f172a;
+            font-weight: 600;
+            font-family: monospace;
+            border: 1px solid #cbd5e1;
+        }
+
+        
+        .profile-card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            border-bottom: 5px solid #eab308; /* Amber Gold Accent */
+        }
+
+        h3 {
+            color: #0f172a;
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.5rem;
+        }
+
+       
+        .parameter-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .parameter-item {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f1f5f9;
+            align-items: center;
+        }
+
+        .parameter-item:last-child {
+            border-bottom: none;
+        }
+
+        .param-label {
+            font-weight: 600;
+            color: #475569;
+            font-size: 0.95rem;
+        }
+
+        .param-value {
+            color: #1e293b;
+            font-size: 1rem;
+        }
+
+        .section-badge {
+            background-color: #dbeafe;
+            color: #1e40af;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .mentor-badge {
+            background-color: #fef9c3;
+            color: #854d0e;
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .no-mentor {
+            color: #94a3b8;
+            font-style: italic;
+        }
+
+        @media (max-width: 650px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1.25rem;
+            }
+            .parameter-item {
+                grid-template-columns: 1fr;
+                gap: 0.25rem;
+            }
+            .meta-strip {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="portal-container">
+        <header>
+            <div>
+                <h1>Student Personal Profile</h1>
+                <p class="welcome-text">Welcome back, <strong>{{ request.user.get_full_name }}</strong></p>
+            </div>
+            <div>
+                <a href="{% url 'user_logout' %}" class="logout-btn">Logout</a>
+            </div>
+        </header>
+
+        <div class="profile-card">
+            <h3>Your Allocated Registry Parameters</h3>
+            <ul class="parameter-list">
+                <li class="parameter-item">
+                    <span class="param-label">Enrolled Section Group</span>
+                    <span class="param-value">
+                        <span class="section-badge">{{ student.section }}</span>
+                    </span>
+                </li>
+
+                <li class="parameter-item">
+                    <span class="param-label">Registered Parent/Guardian</span>
+                    <span class="param-value"><strong>{{ student.parent_name }}</strong></span>
+                </li>
+                
+                <li class="parameter-item">
+                    <span class="param-label">Allocated Class Teacher Advisor</span>
+                    <span class="param-value">
+                        {% if student.class_teacher %}
+                            {{ student.class_teacher.user.get_full_name }} 
+                            <span class="mentor-badge">Mentor Section: {{ student.class_teacher.section }}</span>
+                        {% else %}
+                            <span class="no-mentor">No Mentor Assigned Currently</span>
+                        {% endif %}
+                    </span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+</html>

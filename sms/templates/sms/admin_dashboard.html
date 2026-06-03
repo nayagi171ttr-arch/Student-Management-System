@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+       
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: #334155;
+            padding: 2rem 1.5rem;
+        }
+
+        .dashboard-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+     
+        header {
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            border-left: 5px solid #0f172a;
+        }
+
+        h2 {
+            color: #0f172a;
+            font-size: 1.5rem;
+        }
+
+        .user-info {
+            font-size: 0.9rem;
+            color: #64748b;
+        }
+
+        .logout-btn {
+            color: #ef4444;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 8px;
+            transition: color 0.2s;
+        }
+
+        .logout-btn:hover {
+            color: #dc2626;
+            text-decoration: underline;
+        }
+
+        .message-box {
+            background-color: #f0fdf4;
+            border-left: 4px solid #22c55e;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            color: #166534;
+            font-weight: 500;
+        }
+
+  
+        .card {
+            background: #ffffff;
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        h3 {
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            font-size: 1.25rem;
+            border-bottom: 2px solid #f1f5f9;
+            padding-bottom: 0.75rem;
+        }
+
+       
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+   
+        input[type="text"],
+        input[type="password"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #334155;
+            background-color: #fff;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        input:focus, select:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+
+        
+        #studentFormSection {
+            background-color: #f8fafc;
+            padding: 1.25rem;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.25rem;
+            margin-top: 0.5rem;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 234, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 1rem;
+        }
+
+        button[type="submit"]:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            box-shadow: 0 6px 16px rgba(37, 99, 234, 0.3);
+        }
+
+        button[type="submit"]:active {
+            transform: scale(0.99);
+        }
+
+        @media (max-width: 600px) {
+            .form-grid, #studentFormSection {
+                grid-template-columns: 1fr;
+            }
+            .full-width, #studentFormSection {
+                grid-column: span 1;
+            }
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container">
+        
+        <header>
+            <h2>Admin Dashboard Panel</h2>
+            <p class="user-info">| 
+                <a href="{% url 'user_logout' %}" class="logout-btn">Logout</a>
+            </p>
+        </header>
+
+        {% if messages %}
+            <div class="message-box">
+                {% for m in messages %}
+                    <p>✅ {{ m }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="card">
+            <h3>Create New User Profile</h3>
+            
+            <form action="{% url 'create_user_action' user_uuid=user_uuid %}" method="POST">
+                {% csrf_token %}
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" name="username" placeholder="Desired Username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" name="password" placeholder="Initial Password" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" name="first_name" placeholder="First Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" name="last_name" placeholder="Last Name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>User Role Category Type</label>
+                        <select name="role" id="roleDropdown" onchange="toggleFormInputs()">
+                            <option value="staff">Staff</option>
+                            <option value="student">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Assigned Section Class</label>
+                        <input type="text" name="section" placeholder="e.g., A" required>
+                    </div>
+
+                    <div id="studentFormSection" style="display: none;">
+                        <div class="form-group">
+                            <label>Parent/Guardian Name</label>
+                            <input type="text" name="parent_name" placeholder="Parent/Guardian Name">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Select Class Teacher</label>
+                            <select name="class_teacher">
+                                <option value="">-- No Teacher Assigned --</option>
+                                {% for t in teachers %}
+                                    <option value="{{ t.id }}">{{ t.user.get_full_name }} ({{ t.section }})</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit">Save and Generate Account Credentials</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function toggleFormInputs() {
+            var selectedRole = document.getElementById("roleDropdown").value;
+            var targetDiv = document.getElementById("studentFormSection");
+            targetDiv.style.display = (selectedRole === "student") ? "grid" : "none";
+        }
+    </script>
+</body>
+</html>
